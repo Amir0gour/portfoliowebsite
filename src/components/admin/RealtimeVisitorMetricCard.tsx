@@ -13,21 +13,21 @@ export const RealtimeVisitorMetricCard: React.FC = () => {
   };
 
   return (
-    <div className="p-5 rounded-xl border border-neutral-800 dark:border-neutral-800 light:border-neutral-200 bg-neutral-900/40 dark:bg-neutral-900/40 light:bg-white flex flex-col justify-between relative overflow-hidden group">
+    <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/40 flex flex-col justify-between relative overflow-hidden group">
       
       {/* Subtle ambient gradient */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
 
       <div>
         {/* Header row with live telemetry badge */}
-        <div className="flex items-center justify-between text-neutral-400 text-xs mb-3">
+        <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400 text-xs mb-3">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-neutral-200 dark:text-neutral-200 light:text-neutral-900">
+            <span className="font-semibold text-neutral-900 dark:text-neutral-200">
               Live Visitor Telemetry
             </span>
             {/* Real telemetry status dot - compliant with frontend design constitution */}
-            <span className="flex items-center gap-1 text-[11px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="flex items-center gap-1 text-[11px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800/80 px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
               <span>{isConnected ? 'LIVE' : 'SYNCING'}</span>
             </span>
           </div>
@@ -36,7 +36,7 @@ export const RealtimeVisitorMetricCard: React.FC = () => {
             onClick={() => refresh()}
             title="Refresh stream"
             aria-label="Refresh telemetry stream"
-            className="p-1 rounded text-neutral-500 hover:text-neutral-200 hover:bg-neutral-800 transition-colors cursor-pointer"
+            className="p-1 rounded text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3 h-3" />
           </button>
@@ -44,10 +44,10 @@ export const RealtimeVisitorMetricCard: React.FC = () => {
 
         {/* Primary Live Number: Active Visitors Right Now */}
         <div className="flex items-baseline gap-3 mb-2">
-          <span className="text-3xl sm:text-4xl font-extrabold font-mono text-neutral-100 dark:text-neutral-100 light:text-neutral-900 tracking-tight tabular-nums">
+          <span className="text-3xl sm:text-4xl font-extrabold font-mono text-neutral-900 dark:text-neutral-100 tracking-tight tabular-nums">
             {activeVisitors}
           </span>
-          <span className="text-xs font-semibold text-emerald-400">
+          <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
             concurrent visitor{activeVisitors !== 1 ? 's' : ''} now
           </span>
         </div>

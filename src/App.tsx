@@ -31,7 +31,7 @@ const PortfolioApp: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 dark:bg-neutral-950 light:bg-neutral-50 text-neutral-100 dark:text-neutral-100 light:text-neutral-900 transition-colors">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 dark:text-neutral-100 transition-colors duration-200">
       
       {/* Global Notification Toast */}
       {notification && (

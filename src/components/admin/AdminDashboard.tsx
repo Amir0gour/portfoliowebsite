@@ -35,15 +35,15 @@ export const AdminDashboard: React.FC = () => {
     <div className="space-y-8">
       
       {/* Welcome Banner */}
-      <div className="p-6 rounded-2xl border border-neutral-800 dark:border-neutral-800 light:border-neutral-200 bg-neutral-900/40 dark:bg-neutral-900/40 light:bg-neutral-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="text-xs uppercase tracking-wider text-blue-400 font-semibold mb-1">
+          <div className="text-xs uppercase tracking-wider text-blue-600 dark:text-blue-400 font-semibold mb-1">
             CMS Control Center
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-neutral-100 dark:text-neutral-100 light:text-neutral-900 tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-neutral-100 tracking-tight">
             Portfolio Performance & Content Hub
           </h2>
-          <p className="text-xs text-neutral-400 dark:text-neutral-400 light:text-neutral-600 mt-1">
+          <p className="text-xs text-neutral-600 dark:text-neutral-400 mt-1">
             Manage your developer brand, showcase case studies, and track client inquiries in real time.
           </p>
         </div>
@@ -55,7 +55,7 @@ export const AdminDashboard: React.FC = () => {
             className={`px-3.5 py-2 rounded-lg text-xs font-semibold border transition-colors flex items-center gap-2 cursor-pointer ${
               isPreviewMode
                 ? 'bg-amber-500 text-neutral-950 border-amber-400'
-                : 'border-neutral-700 hover:bg-neutral-800 text-neutral-200'
+                : 'border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-800 dark:text-neutral-200'
             }`}
           >
             <Eye className="w-3.5 h-3.5" />
@@ -68,7 +68,7 @@ export const AdminDashboard: React.FC = () => {
                 resetPortfolioToDefault();
               }
             }}
-            className="px-3.5 py-2 rounded-lg text-xs font-semibold border border-neutral-800 hover:bg-neutral-800/60 text-neutral-400 hover:text-neutral-200 transition-colors flex items-center gap-2 cursor-pointer"
+            className="px-3.5 py-2 rounded-lg text-xs font-semibold border border-neutral-300 dark:border-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-800/60 text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors flex items-center gap-2 cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Demo Data</span>
@@ -83,12 +83,12 @@ export const AdminDashboard: React.FC = () => {
         <RealtimeVisitorMetricCard />
 
         {/* Metric 2: Shipped Projects */}
-        <div className="p-5 rounded-xl border border-neutral-800 dark:border-neutral-800 light:border-neutral-200 bg-neutral-900/30 dark:bg-neutral-900/30 light:bg-white">
-          <div className="flex items-center justify-between text-neutral-400 text-xs mb-2">
+        <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/30">
+          <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400 text-xs mb-2">
             <span>Active Projects</span>
-            <Layers className="w-4 h-4 text-indigo-400" />
+            <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold font-mono text-neutral-100 dark:text-neutral-100 light:text-neutral-900 tracking-tight tabular-nums">
+          <div className="text-2xl sm:text-3xl font-extrabold font-mono text-neutral-900 dark:text-neutral-100 tracking-tight tabular-nums">
             {totalProjectsCount}
           </div>
           <div className="text-[11px] text-neutral-500 mt-1">
@@ -97,26 +97,26 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Metric 3: Inbound Inquiries */}
-        <div className="p-5 rounded-xl border border-neutral-800 dark:border-neutral-800 light:border-neutral-200 bg-neutral-900/30 dark:bg-neutral-900/30 light:bg-white">
-          <div className="flex items-center justify-between text-neutral-400 text-xs mb-2">
+        <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/30">
+          <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400 text-xs mb-2">
             <span>Client Messages</span>
-            <MessageSquare className="w-4 h-4 text-amber-400" />
+            <MessageSquare className="w-4 h-4 text-amber-500 dark:text-amber-400" />
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold font-mono text-neutral-100 dark:text-neutral-100 light:text-neutral-900 tracking-tight tabular-nums">
+          <div className="text-2xl sm:text-3xl font-extrabold font-mono text-neutral-900 dark:text-neutral-100 tracking-tight tabular-nums">
             {messages.length}
           </div>
-          <div className="text-[11px] text-amber-400 font-semibold mt-1">
+          <div className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-1">
             {unreadMessagesCount} unread inquiry{unreadMessagesCount !== 1 ? 'ies' : ''}
           </div>
         </div>
 
         {/* Metric 4: Resume Downloads */}
-        <div className="p-5 rounded-xl border border-neutral-800 dark:border-neutral-800 light:border-neutral-200 bg-neutral-900/30 dark:bg-neutral-900/30 light:bg-white">
-          <div className="flex items-center justify-between text-neutral-400 text-xs mb-2">
+        <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/30">
+          <div className="flex items-center justify-between text-neutral-500 dark:text-neutral-400 text-xs mb-2">
             <span>Resume Views</span>
-            <FileText className="w-4 h-4 text-emerald-400" />
+            <FileText className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           </div>
-          <div className="text-2xl sm:text-3xl font-extrabold font-mono text-neutral-100 dark:text-neutral-100 light:text-neutral-900 tracking-tight tabular-nums">
+          <div className="text-2xl sm:text-3xl font-extrabold font-mono text-neutral-900 dark:text-neutral-100 tracking-tight tabular-nums">
             {analytics.resumeDownloads}
           </div>
           <div className="text-[11px] text-neutral-500 mt-1">

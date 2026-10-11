@@ -108,6 +108,17 @@ export const AdminSecuritySettings: React.FC = () => {
         </ul>
       </div>
 
+      {/* Cross-Device Firebase Sync Active Notice */}
+      <div className="p-4 rounded-xl border border-emerald-900/40 bg-emerald-950/20 text-xs text-emerald-300 space-y-1.5">
+        <div className="font-semibold text-emerald-200 flex items-center gap-1.5">
+          <Shield className="w-4 h-4 text-emerald-400" />
+          <span>Firebase Cloud Sync Active across all devices</span>
+        </div>
+        <p className="text-emerald-300/90 leading-relaxed text-[11px]">
+          Firebase Firestore is connected. Whenever you update your Admin Gmail or password here, or make edits in your CMS, changes are stored in Google Cloud Firestore and will automatically sync across any other phone, computer, or Netlify deployment.
+        </p>
+      </div>
+
       {status && (
         <div
           className={`p-4 rounded-xl text-xs flex items-start gap-2.5 ${

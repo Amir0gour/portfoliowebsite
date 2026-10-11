@@ -24,6 +24,7 @@ interface PortfolioContextType {
   savePortfolio: (dataToSave?: PortfolioData) => Promise<boolean>;
   resetPortfolioToDefault: () => Promise<void>;
   loginAdmin: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logoutAdmin: () => void;
   updateCredentials: (payload: { newEmail?: string; currentPassword?: string; newPassword?: string }) => Promise<{ success: boolean; error?: string }>;
   openCaseStudy: (project: Project) => void;
@@ -67,6 +68,8 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     async function loadData() {
       try {
         setIsLoading(true);
+        // Load cloud settings from Firebase so admin email/password sync across devices
+        await apiService.getCloudSettings().catch(() => {});
         const [portfolioData, analyticsData] = await Promise.all([
           apiService.getPortfolio(),
           apiService.getAnalytics()
@@ -75,6 +78,8 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           setPublishedPortfolio(portfolioData);
           setDraftPortfolio(portfolioData);
           setAnalytics(analyticsData);
+          const currentAdmin = apiService.getAdminUser();
+          if (currentAdmin) setAdminEmail(currentAdmin);
           apiService.trackVisit();
         }
       } catch (err) {
@@ -169,6 +174,19 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setIsAuthenticated(true);
       setAdminEmail(email);
       showNotification('Welcome to Admin CMS Portal', 'success');
+      await refreshMessages();
+      return { success: true };
+    }
+    return { success: false, error: res.error };
+  };
+
+  const loginWithGoogle = async () => {
+    const res = await apiService.loginWithGoogle();
+    if (res.success && res.user) {
+      setIsAuthenticated(true);
+      const email = res.user.email || 'admin@portfolio.dev';
+      setAdminEmail(email);
+      showNotification(`Signed in with Google as ${email}`, 'success');
       await refreshMessages();
       return { success: true };
     }
@@ -274,6 +292,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         savePortfolio,
         resetPortfolioToDefault,
         loginAdmin,
+        loginWithGoogle,
         logoutAdmin,
         updateCredentials,
         openCaseStudy,

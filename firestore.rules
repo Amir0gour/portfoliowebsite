@@ -1,0 +1,90 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Admin authorization check: either in /admins/ collection or signed in with authorized email
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.email == 'a3045809@gmail.com' ||
+        request.auth.token.email == 'admin@portfolio.dev'
+      );
+    }
+
+    // 1. Portfolio Data (/portfolio/main)
+    function isValidPortfolio(data) {
+      return data.keys().hasAll(['profile', 'projects', 'skills', 'timeline', 'testimonials']) &&
+             data.profile is map &&
+             data.projects is list &&
+             data.skills is list &&
+             data.timeline is list &&
+             data.testimonials is list;
+    }
+
+    match /portfolio/{docId} {
+      allow get: if true;
+      allow list: if true;
+      allow write: if (isAdmin() || isSignedIn()) && isValidId(docId) && isValidPortfolio(incoming());
+    }
+
+    // 2. Contact Inquiries (/messages/{messageId})
+    function isValidMessage(data) {
+      return data.keys().hasAll(['id', 'name', 'email', 'subject', 'message', 'createdAt']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.email is string && data.email.size() > 0 && data.email.size() <= 120 &&
+             data.subject is string && data.subject.size() > 0 && data.subject.size() <= 200 &&
+             data.message is string && data.message.size() > 0 && data.message.size() <= 2000 &&
+             data.createdAt is string && data.createdAt.size() <= 50;
+    }
+
+    match /messages/{messageId} {
+      // Anyone can submit a contact inquiry if payload is valid
+      allow create: if isValidId(messageId) && isValidMessage(incoming());
+      // Only authenticated admin can view, update (read/star/archive/reply), or delete messages
+      allow get, list: if isSignedIn();
+      allow update: if isSignedIn() && (
+        incoming().diff(existing()).affectedKeys().hasOnly(['read', 'starred', 'archived', 'replied'])
+      );
+      allow delete: if isSignedIn();
+    }
+
+    // 3. Admin Settings (/settings/admin)
+    function isValidSettings(data) {
+      return data.keys().hasAll(['adminEmail']) &&
+             data.adminEmail is string && data.adminEmail.size() > 0 && data.adminEmail.size() <= 120;
+    }
+
+    match /settings/{docId} {
+      allow get: if true;
+      allow write: if (isAdmin() || isSignedIn()) && isValidId(docId) && isValidSettings(incoming());
+    }
+
+    // 4. Admin Users
+    match /admins/{uid} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin() && isValidId(uid);
+    }
+  }
+}

@@ -73,54 +73,54 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 border-b border-neutral-800/60 dark:border-neutral-800/60 light:border-neutral-200">
+    <section id="contact" className="py-20 border-b border-neutral-200 dark:border-neutral-800/60 transition-colors">
       <div className="max-w-6xl mx-auto px-6">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
           {/* Left Column: Context & Direct Channels */}
           <div className="lg:col-span-5">
-            <div className="text-xs uppercase tracking-wider text-blue-400 font-semibold mb-2">
+            <div className="text-xs uppercase tracking-wider text-blue-600 dark:text-blue-400 font-semibold mb-2">
               Get In Touch
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-neutral-100 dark:text-neutral-100 light:text-neutral-900 tracking-tight mb-4">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-neutral-900 dark:text-neutral-100 tracking-tight mb-4">
               Initiate a Technical Conversation
             </h2>
-            <p className="text-sm text-neutral-400 dark:text-neutral-400 light:text-neutral-600 leading-relaxed mb-8">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-8">
               Whether you need senior architectural leadership on a distributed pipeline, performance consulting for a mission-critical web app, or an advisory partner, send a message below.
             </p>
 
             {/* Direct Email Card */}
-            <div className="p-5 rounded-xl border border-neutral-800 dark:border-neutral-800 light:border-neutral-200 bg-neutral-900/40 dark:bg-neutral-900/40 light:bg-neutral-50 mb-6">
-              <div className="text-xs font-semibold text-neutral-400 mb-1">
+            <div className="p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/40 mb-6 shadow-xs">
+              <div className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 mb-1">
                 Direct Contact Mailbox
               </div>
               <div className="flex items-center justify-between gap-3">
                 <a
                   href={`mailto:${profile.email}`}
-                  className="font-mono text-sm text-neutral-200 dark:text-neutral-200 light:text-neutral-800 hover:text-blue-400 transition-colors font-semibold"
+                  className="font-mono text-sm text-neutral-900 dark:text-neutral-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-semibold"
                 >
                   {profile.email}
                 </a>
                 <button
                   onClick={handleCopyEmail}
-                  className="p-1.5 rounded-lg border border-neutral-800 dark:border-neutral-800 light:border-neutral-300 text-neutral-400 hover:text-neutral-100 dark:hover:text-neutral-100 light:hover:text-neutral-900 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg border border-neutral-300 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
                   title="Copy email to clipboard"
                   aria-label="Copy email"
                 >
-                  {copiedEmail ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  {copiedEmail ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
             {/* Availability details */}
-            <div className="space-y-3 text-xs text-neutral-400 dark:text-neutral-400 light:text-neutral-600">
+            <div className="space-y-3 text-xs text-neutral-600 dark:text-neutral-400">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 <span>Response Time: Typically under 24 hours on business days</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-blue-400" />
+                <span className="w-2 h-2 rounded-full bg-blue-500" />
                 <span>Timezone: Pacific Standard Time (PST / UTC-8)</span>
               </div>
             </div>
@@ -129,20 +129,20 @@ export const ContactSection: React.FC = () => {
 
           {/* Right Column: Contact Form */}
           <div className="lg:col-span-7">
-            <div className="p-8 rounded-2xl border border-neutral-800 dark:border-neutral-800 light:border-neutral-200 bg-neutral-900/30 dark:bg-neutral-900/30 light:bg-neutral-50/90 backdrop-blur-sm">
+            <div className="p-8 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/30 backdrop-blur-sm shadow-xs">
               
               {submittedStatus && (
                 <div
                   className={`p-4 rounded-xl mb-6 text-xs flex items-start gap-3 ${
                     submittedStatus.success
-                      ? 'bg-emerald-950/40 border border-emerald-800/80 text-emerald-200'
-                      : 'bg-red-950/40 border border-red-800/80 text-red-200'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800/80 text-emerald-800 dark:text-emerald-200'
+                      : 'bg-red-50 dark:bg-red-950/40 border border-red-300 dark:border-red-800/80 text-red-800 dark:text-red-200'
                   }`}
                 >
                   {submittedStatus.success ? (
-                    <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                   ) : (
-                    <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                    <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                   )}
                   <span>{submittedStatus.message}</span>
                 </div>
@@ -153,8 +153,8 @@ export const ContactSection: React.FC = () => {
                 {/* Name & Email Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-300 dark:text-neutral-300 light:text-neutral-700 mb-1.5">
-                      Your Name <span className="text-red-400">*</span>
+                    <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
+                      Your Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -162,13 +162,13 @@ export const ContactSection: React.FC = () => {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Jane Doe"
-                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-950 dark:bg-neutral-950 light:bg-white border border-neutral-800 dark:border-neutral-800 light:border-neutral-300 text-neutral-100 dark:text-neutral-100 light:text-neutral-900 text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs focus:outline-none focus:border-blue-500 transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-300 dark:text-neutral-300 light:text-neutral-700 mb-1.5">
-                      Email Address <span className="text-red-400">*</span>
+                    <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
+                      Email Address <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -176,7 +176,7 @@ export const ContactSection: React.FC = () => {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="jane@company.com"
-                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-950 dark:bg-neutral-950 light:bg-white border border-neutral-800 dark:border-neutral-800 light:border-neutral-300 text-neutral-100 dark:text-neutral-100 light:text-neutral-900 text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs focus:outline-none focus:border-blue-500 transition-colors"
                     />
                   </div>
                 </div>
@@ -184,7 +184,7 @@ export const ContactSection: React.FC = () => {
                 {/* Subject & Budget Row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-300 dark:text-neutral-300 light:text-neutral-700 mb-1.5">
+                    <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
                       Topic / Subject
                     </label>
                     <input
@@ -192,21 +192,21 @@ export const ContactSection: React.FC = () => {
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       placeholder="Technical Architecture Consultation"
-                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-950 dark:bg-neutral-950 light:bg-white border border-neutral-800 dark:border-neutral-800 light:border-neutral-300 text-neutral-100 dark:text-neutral-100 light:text-neutral-900 text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs focus:outline-none focus:border-blue-500 transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-300 dark:text-neutral-300 light:text-neutral-700 mb-1.5">
+                    <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
                       Target Project Scope / Budget
                     </label>
                     <select
                       value={formData.budget}
                       onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-950 dark:bg-neutral-950 light:bg-white border border-neutral-800 dark:border-neutral-800 light:border-neutral-300 text-neutral-100 dark:text-neutral-100 light:text-neutral-900 text-xs focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
                     >
                       {budgetOptions.map(opt => (
-                        <option key={opt} value={opt} className="bg-neutral-900 text-white">
+                        <option key={opt} value={opt} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white">
                           {opt}
                         </option>
                       ))}
@@ -216,8 +216,8 @@ export const ContactSection: React.FC = () => {
 
                 {/* Message Body */}
                 <div>
-                  <label className="block text-xs font-semibold text-neutral-300 dark:text-neutral-300 light:text-neutral-700 mb-1.5">
-                    Project Details & Scope <span className="text-red-400">*</span>
+                  <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
+                    Project Details & Scope <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     required
@@ -225,7 +225,7 @@ export const ContactSection: React.FC = () => {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Tell me about your system requirements, technical goals, and target timeline..."
-                    className="w-full px-4 py-2.5 rounded-lg bg-neutral-950 dark:bg-neutral-950 light:bg-white border border-neutral-800 dark:border-neutral-800 light:border-neutral-300 text-neutral-100 dark:text-neutral-100 light:text-neutral-900 text-xs focus:outline-none focus:border-blue-500 transition-colors resize-y"
+                    className="w-full px-4 py-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs focus:outline-none focus:border-blue-500 transition-colors resize-y"
                   />
                 </div>
 

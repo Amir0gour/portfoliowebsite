@@ -1,0 +1,144 @@
+{
+  "entities": {
+    "Portfolio": {
+      "title": "Portfolio",
+      "description": "The complete portfolio CMS content document including profile, projects, skills, timeline, testimonials, and settings.",
+      "type": "object",
+      "properties": {
+        "profile": {
+          "type": "object",
+          "description": "User profile information"
+        },
+        "projects": {
+          "type": "array",
+          "description": "List of portfolio projects"
+        },
+        "skills": {
+          "type": "array",
+          "description": "List of skills and proficiencies"
+        },
+        "timeline": {
+          "type": "array",
+          "description": "Work and education timeline items"
+        },
+        "testimonials": {
+          "type": "array",
+          "description": "Client and peer recommendations"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of last modification"
+        }
+      },
+      "required": ["profile", "projects", "skills", "timeline", "testimonials"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Public visitor contact inquiry message sent to admin.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique message identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Sender name",
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "description": "Sender email",
+          "maxLength": 120
+        },
+        "subject": {
+          "type": "string",
+          "description": "Message subject",
+          "maxLength": 200
+        },
+        "message": {
+          "type": "string",
+          "description": "Message body text",
+          "maxLength": 2000
+        },
+        "budget": {
+          "type": "string",
+          "description": "Optional budget estimate",
+          "maxLength": 50
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of submission"
+        },
+        "read": {
+          "type": "boolean",
+          "description": "Whether read by admin"
+        },
+        "starred": {
+          "type": "boolean",
+          "description": "Starred flag"
+        },
+        "archived": {
+          "type": "boolean",
+          "description": "Archived flag"
+        },
+        "replied": {
+          "type": "boolean",
+          "description": "Replied flag"
+        }
+      },
+      "required": ["id", "name", "email", "subject", "message", "createdAt"]
+    },
+    "AdminSettings": {
+      "title": "AdminSettings",
+      "description": "Admin configuration containing the admin email and credential metadata for CMS management across devices.",
+      "type": "object",
+      "properties": {
+        "adminEmail": {
+          "type": "string",
+          "description": "Primary administrator contact and login email",
+          "maxLength": 120
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of last settings change"
+        }
+      },
+      "required": ["adminEmail"]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Admin authorization document granting access to Firestore rules.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "description": "Admin email address"
+        },
+        "role": {
+          "type": "string",
+          "description": "User role, defaults to admin"
+        }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/portfolio/main": {
+      "schema": "Portfolio",
+      "description": "The main portfolio data document read publicly and edited by admin"
+    },
+    "/messages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Contact form submissions from visitors, readable and manageable by admin"
+    },
+    "/settings/admin": {
+      "schema": "AdminSettings",
+      "description": "Admin credentials and settings synced cross-device"
+    },
+    "/admins/{uid}": {
+      "schema": "AdminUser",
+      "description": "Designated administrator UIDs for rule authorization"
+    }
+  }
+}
