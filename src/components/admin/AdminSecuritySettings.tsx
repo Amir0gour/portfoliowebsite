@@ -49,18 +49,19 @@ export const AdminSecuritySettings: React.FC = () => {
     if (res.success) {
       // If user selected sync public email, update profile too
       if (syncPublicEmail && newEmail.trim() && newEmail.trim() !== portfolio.profile.email) {
-        updatePortfolioData(prev => ({
-          ...prev,
+        const updated = {
+          ...portfolio,
           profile: {
-            ...prev.profile,
+            ...portfolio.profile,
             email: newEmail.trim(),
             socialLinks: {
-              ...prev.profile.socialLinks,
+              ...portfolio.profile.socialLinks,
               email: `mailto:${newEmail.trim()}`
             }
           }
-        }));
-        savePortfolio();
+        };
+        updatePortfolioData(() => updated);
+        savePortfolio(updated);
       }
 
       setStatus({

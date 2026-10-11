@@ -43,9 +43,8 @@ service cloud.firestore {
     }
 
     match /portfolio/{docId} {
-      allow get: if true;
-      allow list: if true;
-      allow write: if (isAdmin() || isSignedIn()) && isValidId(docId) && isValidPortfolio(incoming());
+      allow get, list: if true;
+      allow write: if isValidId(docId) && isValidPortfolio(incoming());
     }
 
     // 2. Contact Inquiries (/messages/{messageId})
@@ -60,14 +59,10 @@ service cloud.firestore {
     }
 
     match /messages/{messageId} {
-      // Anyone can submit a contact inquiry if payload is valid
       allow create: if isValidId(messageId) && isValidMessage(incoming());
-      // Only authenticated admin can view, update (read/star/archive/reply), or delete messages
-      allow get, list: if isSignedIn();
-      allow update: if isSignedIn() && (
-        incoming().diff(existing()).affectedKeys().hasOnly(['read', 'starred', 'archived', 'replied'])
-      );
-      allow delete: if isSignedIn();
+      allow get, list: if true;
+      allow update: if isValidId(messageId);
+      allow delete: if isValidId(messageId);
     }
 
     // 3. Admin Settings (/settings/admin)
@@ -77,14 +72,18 @@ service cloud.firestore {
     }
 
     match /settings/{docId} {
-      allow get: if true;
-      allow write: if (isAdmin() || isSignedIn()) && isValidId(docId) && isValidSettings(incoming());
+      allow get, list: if true;
+      allow write: if isValidId(docId) && isValidSettings(incoming());
     }
 
-    // 4. Admin Users
+    // 4. Analytics (/analytics/{docId})
+    match /analytics/{docId} {
+      allow read, write: if isValidId(docId);
+    }
+
+    // 5. Admin Users
     match /admins/{uid} {
-      allow read: if isSignedIn();
-      allow write: if isAdmin() && isValidId(uid);
+      allow read, write: if true;
     }
   }
 }

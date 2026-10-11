@@ -62,7 +62,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }, 4000);
   }, []);
 
-  // Initial load
+  // Initial load & real-time synchronization across devices
   useEffect(() => {
     let isMounted = true;
     async function loadData() {
@@ -89,8 +89,17 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
     }
     loadData();
+
+    // Listen to real-time Firestore updates so Device B, mobile, etc. update instantly
+    const unsubscribe = apiService.subscribePortfolio((freshPortfolio) => {
+      if (isMounted) {
+        setPublishedPortfolio(freshPortfolio);
+      }
+    });
+
     return () => {
       isMounted = false;
+      unsubscribe();
     };
   }, []);
 
@@ -152,7 +161,11 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     if (res.success && res.data) {
       setPublishedPortfolio(res.data);
       setDraftPortfolio(res.data);
-      showNotification('Portfolio changes published successfully!', 'success');
+      if (res.cloudSynced) {
+        showNotification('Published & synced to cloud across all devices!', 'success');
+      } else {
+        showNotification(res.error || 'Saved locally on this device', 'info');
+      }
       return true;
     } else {
       showNotification(res.error || 'Failed to save changes', 'error');

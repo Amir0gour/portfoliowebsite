@@ -128,10 +128,26 @@ export const apiService = {
     return initialPortfolioData;
   },
 
+  // Real-time Firestore subscription so any device updates automatically
+  subscribePortfolio(callback: (data: PortfolioData) => void): () => void {
+    const portfolioDocRef = doc(db, 'portfolio', 'main');
+    const unsubscribe = onSnapshot(portfolioDocRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const firestoreData = snapshot.data() as PortfolioData;
+        localStorage.setItem(LOCAL_STORAGE_PORTFOLIO_KEY, JSON.stringify(firestoreData));
+        callback(firestoreData);
+      }
+    }, (error) => {
+      console.warn('Firestore real-time subscription error:', error);
+    });
+    return unsubscribe;
+  },
+
   // 2. Update Portfolio (Syncs directly to Firestore & local cache)
-  async updatePortfolio(data: PortfolioData): Promise<{ success: boolean; data?: PortfolioData; error?: string }> {
+  async updatePortfolio(data: PortfolioData): Promise<{ success: boolean; data?: PortfolioData; error?: string; cloudSynced?: boolean }> {
     const portfolioDocRef = doc(db, 'portfolio', 'main');
     let firestoreSuccess = false;
+    let cloudError = '';
 
     try {
       await setDoc(portfolioDocRef, {
@@ -143,9 +159,9 @@ export const apiService = {
         updatedAt: new Date().toISOString()
       }, { merge: true });
       firestoreSuccess = true;
-    } catch (error) {
+    } catch (error: any) {
+      cloudError = error?.message || String(error);
       console.warn('Firestore write error (will fallback to server/cache):', error);
-      // We don't throw fatal here so the user can continue in offline/fallback mode
     }
 
     // Also sync to backend server if active
@@ -162,7 +178,7 @@ export const apiService = {
       if (res.ok) {
         const json = await res.json();
         localStorage.setItem(LOCAL_STORAGE_PORTFOLIO_KEY, JSON.stringify(json.data || data));
-        return { success: true, data: json.data || data };
+        return { success: true, data: json.data || data, cloudSynced: true };
       }
     } catch {
       // ignore
@@ -170,7 +186,16 @@ export const apiService = {
 
     // Always cache locally so immediate changes render
     localStorage.setItem(LOCAL_STORAGE_PORTFOLIO_KEY, JSON.stringify(data));
-    return { success: true, data };
+    if (firestoreSuccess) {
+      return { success: true, data, cloudSynced: true };
+    } else {
+      return { 
+        success: true, 
+        data, 
+        cloudSynced: false, 
+        error: `Saved to this device. Cloud database notice: ${cloudError}` 
+      };
+    }
   },
 
   // 3. Submit Contact Form (Firestore 'messages' collection)
@@ -348,8 +373,20 @@ export const apiService = {
     return true;
   },
 
-  // 7. Get Analytics
+  // 7. Get Analytics (Firestore -> API -> Local cache)
   async getAnalytics(): Promise<AnalyticsStats> {
+    try {
+      const statsRef = doc(db, 'analytics', 'stats');
+      const snap = await getDoc(statsRef);
+      if (snap.exists()) {
+        const data = snap.data() as AnalyticsStats;
+        localStorage.setItem(LOCAL_STORAGE_ANALYTICS_KEY, JSON.stringify(data));
+        return data;
+      }
+    } catch (err) {
+      console.warn('Firestore analytics get error:', err);
+    }
+
     try {
       const res = await fetch('/api/analytics');
       if (res.ok && isJsonResponse(res)) {
@@ -377,6 +414,23 @@ export const apiService = {
   // 8. Track Visit
   async trackVisit(): Promise<void> {
     try {
+      const statsRef = doc(db, 'analytics', 'stats');
+      const snap = await getDoc(statsRef);
+      const current = snap.exists() ? (snap.data() as AnalyticsStats) : initialAnalytics;
+      const updated: AnalyticsStats = {
+        ...current,
+        pageViews: (current.pageViews || 0) + 1,
+        uniqueVisitors: (current.uniqueVisitors || 0) + 1,
+        lastUpdated: new Date().toISOString()
+      };
+      await setDoc(statsRef, updated, { merge: true });
+      localStorage.setItem(LOCAL_STORAGE_ANALYTICS_KEY, JSON.stringify(updated));
+      return;
+    } catch {
+      // fallback
+    }
+
+    try {
       await fetch('/api/track/visit', { method: 'POST' });
     } catch {
       // offline fallback
@@ -388,6 +442,22 @@ export const apiService = {
 
   // 9. Track Resume Download
   async trackResumeDownload(): Promise<void> {
+    try {
+      const statsRef = doc(db, 'analytics', 'stats');
+      const snap = await getDoc(statsRef);
+      const current = snap.exists() ? (snap.data() as AnalyticsStats) : initialAnalytics;
+      const updated: AnalyticsStats = {
+        ...current,
+        resumeDownloads: (current.resumeDownloads || 0) + 1,
+        lastUpdated: new Date().toISOString()
+      };
+      await setDoc(statsRef, updated, { merge: true });
+      localStorage.setItem(LOCAL_STORAGE_ANALYTICS_KEY, JSON.stringify(updated));
+      return;
+    } catch {
+      // fallback
+    }
+
     try {
       await fetch('/api/track/resume', { method: 'POST' });
     } catch {

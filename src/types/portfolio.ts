@@ -113,6 +113,7 @@ export interface AnalyticsStats {
   uniqueVisitors: number;
   resumeDownloads: number;
   contactSubmissions: number;
+  lastUpdated?: string;
   recentActivity: Array<{
     type: 'visit' | 'contact' | 'resume' | 'project_click';
     timestamp: string;
