@@ -1,0 +1,6 @@
+{
+  "name": "Devfolio & CMS - Modern Portfolio & Admin Portal",
+  "description": "Production-grade personal developer portfolio with dynamic content management, real-time metrics, project showcase, and admin CMS portal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
