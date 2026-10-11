@@ -226,7 +226,7 @@ export const AdminMessagesInbox: React.FC = () => {
               {/* Message Scope & Budget info */}
               {selectedMessage.budget && (
                 <div className="p-3 rounded-lg border border-neutral-800 bg-neutral-950/60 text-xs text-neutral-400 font-mono">
-                  Target Project Budget: <span className="text-blue-400 font-semibold">{selectedMessage.budget}</span>
+                  Target Scope / Budget: <span className="text-blue-400 font-semibold">{selectedMessage.budget}</span>
                 </div>
               )}
 

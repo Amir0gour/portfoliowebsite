@@ -10,9 +10,9 @@ export const ContactSection: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: 'Technical Advisory / Staff Contract',
+    subject: '',
     message: '',
-    budget: '$25k — $50k'
+    budget: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,11 +22,14 @@ export const ContactSection: React.FC = () => {
   } | null>(null);
   const [copiedEmail, setCopiedEmail] = useState(false);
 
-  const budgetOptions = [
+  const scopePresets = [
     '< $10,000',
     '$10,000 — $25,000',
     '$25,000 — $50,000',
-    '$50,000+'
+    '$50,000+',
+    'Hourly Advisory',
+    'MVP Build',
+    'Architecture Audit'
   ];
 
   const handleCopyEmail = () => {
@@ -60,9 +63,9 @@ export const ContactSection: React.FC = () => {
       setFormData({
         name: '',
         email: '',
-        subject: 'Technical Advisory / Staff Contract',
+        subject: '',
         message: '',
-        budget: '$25k — $50k'
+        budget: ''
       });
     } else {
       setSubmittedStatus({
@@ -191,26 +194,58 @@ export const ContactSection: React.FC = () => {
                       type="text"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      placeholder="Technical Architecture Consultation"
-                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs focus:outline-none focus:border-blue-500 transition-colors"
+                      placeholder="e.g. Technical Advisory, Architecture, or Consultation"
+                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs focus:outline-none focus:border-blue-500 transition-colors placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1.5">
-                      Target Project Scope / Budget
-                    </label>
-                    <select
-                      value={formData.budget}
-                      onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
-                    >
-                      {budgetOptions.map(opt => (
-                        <option key={opt} value={opt} className="bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white">
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label htmlFor="project-scope-input" className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
+                        Target Project Scope / Budget
+                      </label>
+                      <span className="text-[11px] text-neutral-500 dark:text-neutral-400 font-normal">
+                        Write custom or pick preset
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <input
+                        id="project-scope-input"
+                        type="text"
+                        list="scope-budget-presets"
+                        value={formData.budget}
+                        onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                        placeholder="e.g. $25k — $50k, Full MVP build, or Advisory contract"
+                        className="w-full px-4 py-2.5 rounded-lg bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs focus:outline-none focus:border-blue-500 transition-colors placeholder:text-neutral-400 dark:placeholder:text-neutral-600"
+                      />
+                      <datalist id="scope-budget-presets">
+                        {scopePresets.map((opt) => (
+                          <option key={opt} value={opt} />
+                        ))}
+                      </datalist>
+                    </div>
+
+                    {/* Quick suggestion chips */}
+                    <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                      <span className="text-[11px] text-neutral-400 dark:text-neutral-500">Quick options:</span>
+                      {scopePresets.map((opt) => {
+                        const isSelected = formData.budget === opt;
+                        return (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, budget: isSelected ? '' : opt })}
+                            className={`px-2 py-0.5 rounded text-[11px] transition-colors cursor-pointer border ${
+                              isSelected
+                                ? 'bg-blue-600/15 border-blue-500 text-blue-600 dark:text-blue-400 font-semibold'
+                                : 'bg-neutral-100 dark:bg-neutral-900/60 border-neutral-200 dark:border-neutral-800 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:border-neutral-300 dark:hover:border-neutral-700'
+                            }`}
+                          >
+                            {opt}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
