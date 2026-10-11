@@ -12,10 +12,44 @@ import {
   deleteDoc, 
   onSnapshot 
 } from 'firebase/firestore';
-import firebaseConfig from '../../firebase-applet-config.json';
+
+interface FirebaseRawConfig {
+  apiKey?: string;
+  authDomain?: string;
+  projectId?: string;
+  storageBucket?: string;
+  messagingSenderId?: string;
+  appId?: string;
+  firestoreDatabaseId?: string;
+}
+
+// Safely probe for local firebase-applet-config.json if present without failing builds when omitted
+const localConfigFiles = import.meta.glob<{ default?: FirebaseRawConfig } & FirebaseRawConfig>(
+  '../../firebase-applet-config.json',
+  { eager: true }
+);
+const localConfigEntry = localConfigFiles['../../firebase-applet-config.json'];
+const fallbackConfig: FirebaseRawConfig = (localConfigEntry?.default || localConfigEntry || {}) as FirebaseRawConfig;
+
+const env = import.meta.env;
+
+export const firestoreDatabaseId: string =
+  (env.VITE_FIREBASE_DATABASE_ID as string) ||
+  fallbackConfig.firestoreDatabaseId ||
+  'ai-studio-devfoliocmsmoder-47d70254-aaa8-4310-81a4-0bda8cc11f91';
+
+export const firebaseConfig = {
+  apiKey: (env.VITE_FIREBASE_API_KEY as string) || fallbackConfig.apiKey || '',
+  authDomain: (env.VITE_FIREBASE_AUTH_DOMAIN as string) || fallbackConfig.authDomain || '',
+  projectId: (env.VITE_FIREBASE_PROJECT_ID as string) || fallbackConfig.projectId || '',
+  storageBucket: (env.VITE_FIREBASE_STORAGE_BUCKET as string) || fallbackConfig.storageBucket || '',
+  messagingSenderId: (env.VITE_FIREBASE_MESSAGING_SENDER_ID as string) || fallbackConfig.messagingSenderId || '',
+  appId: (env.VITE_FIREBASE_APP_ID as string) || fallbackConfig.appId || '',
+  firestoreDatabaseId,
+};
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+export const db = getFirestore(app, firestoreDatabaseId);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
